@@ -38,8 +38,21 @@ function App() {
             getPosition: d => [d.lon, d.lat],
             getFillColor: d => [48, 128, d.value * 255, 255],
             getLineColor: (d, di) => [0, 0, 0],
+            getElevation: d => {
+                if (Math.random() < 1e-4) console.log(Math.pow(3.2, (16 - viewState.zoom)))
+
+                //return Math.pow((1 - viewState.zoom/20) * 200, 2);
+                return d.value * Math.min(Math.max(Math.pow(2.8, (18 - viewState.zoom)), 1e4), 1e6);
+                //return d.value * Math.max(Math.pow(3.2, (16 - viewState.zoom)), 5e4);
+            },
+
+
             //getElevation: d => d.value / viewState.zoom
-            getElevation: d => { if (Math.random() < 1e-4) console.log(viewState.zoom); return viewState.zoom }
+            //elevation: d => { if (Math.random() < 1e-4) console.log(viewState.zoom); return Math.pow(2, viewState.zoom) * 1000 }
+            //getElevation: d => { if (Math.random() < 1e-4) console.log(viewState.zoom); return Math.pow(1-viewState.zoom/20, 2) * 1e3 },
+            updateTriggers: {
+                getElevation: viewState.zoom,
+            }
         }),
     ];
 
@@ -51,7 +64,7 @@ function App() {
         <DeckGL
             controller={true}
             viewState={viewState}
-            onViewStateChange={ e => { console.log('viewstatechanged', e.viewState.zoom); setViewState(e.viewState) } }
+            onViewStateChange={ e => { setViewState(e.viewState) } }
             layers={layers} >
             <Map
                 className="w-full h-full"
