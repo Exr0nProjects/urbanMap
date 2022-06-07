@@ -27,7 +27,12 @@ if __name__ == '__main__':
     df = get_df_simplemaps_uscities_basic()
 
     max_pop = max(df['pop'])
-    df['value'] = np.log(df['pop']) / np.log(max_pop * 2)
+
+    # df['value'] = np.log(df['pop']); df['value'] = df['value'] / max(df['value'])
+
+    df['value'] = np.power(df['pop'], 1/4); df['value'] = df['value'] / max(df['value'])
+
+    # df['value'] = np.log(df['pop']) / np.log(max_pop * 2)
 
     df.head(500).to_csv('top_100_cities.csv')
 

@@ -17,46 +17,33 @@ const INITIAL_VIEW_STATE = {
     bearing: 0
 };
 
-const COLUMNS = 'http://localhost:3000/data/cities.json';
+const POPULATION_COLUMNS_DATA = 'http://localhost:3000/data/cities.json';
 
 function App() {
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
+    const geo_elevation_scale_from_zoom = (zoom) => Math.min(Math.max(Math.pow(2.8, (18 - zoom)), 1e4), 1e6);
+
     const layers = [
         new ColumnLayer({
             id: 'population-columns',
-            data: COLUMNS,
+            data: POPULATION_COLUMNS_DATA,
             diskResolution: 40,
             coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
             radius: 1000,
             opacity: 0.5,
             extruded: true,
             pickable: true,
-            //elevationScale: 1e6,
             elevationScale: 1,
-            //getElevationScale: d => { console.log(viewState.zoom); return viewState.zoom },
             getPosition: d => [d.lon, d.lat],
             getFillColor: d => [48, 128, d.value * 255, 255],
             getLineColor: (d, di) => [0, 0, 0],
-            getElevation: d => {
-                if (Math.random() < 1e-4) console.log(Math.pow(3.2, (16 - viewState.zoom)))
-
-                //return Math.pow((1 - viewState.zoom/20) * 200, 2);
-                return d.value * Math.min(Math.max(Math.pow(2.8, (18 - viewState.zoom)), 1e4), 1e6);
-                //return d.value * Math.max(Math.pow(3.2, (16 - viewState.zoom)), 5e4);
-            },
-
-
-            //getElevation: d => d.value / viewState.zoom
-            //elevation: d => { if (Math.random() < 1e-4) console.log(viewState.zoom); return Math.pow(2, viewState.zoom) * 1000 }
-            //getElevation: d => { if (Math.random() < 1e-4) console.log(viewState.zoom); return Math.pow(1-viewState.zoom/20, 2) * 1e3 },
+            getElevation: d => d.value * geo_elevation_scale_from_zoom(viewState.zoom),
             updateTriggers: {
                 getElevation: viewState.zoom,
             }
         }),
     ];
-
-    //let zoom_reference = INITIAL_VIEW_STATE.zoom;
 
     return (
         <div className="bg-gray-700 text-white w-screen h-screen overflow-hidden scroll-none">
