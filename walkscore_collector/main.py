@@ -43,15 +43,15 @@ if __name__ == '__main__':
 
     df = pd.read_csv('./top_100_cities.csv')
 
-    random.seed(1337)
+    random.seed(1338)
 
     print("# cities:", len(df))
 
     for id, [_, city, state, lat, lon, pop, density, value] in tqdm(df.iterrows(), total=len(df), leave=False):
         print('#', city, lat, lon)
-        if id < 182: continue
+        if id < 30: continue
         for i in range(10):
-            g = get_data_for(*get_point_within(lat, lon), API_KEY)
+            g = get_data_for(*get_point_within(lat, lon, mi=5), API_KEY)
             g['city'] = city
             print(g)
             with open('tuesday_out.txt', 'a') as wf:
