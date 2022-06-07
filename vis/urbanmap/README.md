@@ -8,3 +8,5 @@
     - since the official docs aren't about react: https://maplibre.org/maplibre-gl-js-docs/api/
 1. nevermind, we are now going to use maplibre-gl 1.x to directly replace mapbox-gl, as per https://www.npmjs.com/package/maplibre-gl, pointed to by https://visgl.github.io/react-map-gl/docs/get-started/mapbox-tokens
 
+1. The missing links were in the examples (who would've guessed)
+    - see here: https://github.com/visgl/react-map-gl/blob/7.0-release/examples/get-started/maplibre/app.js

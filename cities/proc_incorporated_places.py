@@ -1,5 +1,5 @@
 import pandas as pd
-
+import json
 
 def get_df_incorporated_places():
     FILENAME = "../data/incorporated_places.tsv"
@@ -17,9 +17,25 @@ def get_df_simplemaps_uscities_basic():
     return df
 
 
+def fake_jsonl(data):
+    return '[\n' + ',\n'.join('    ' + json.dumps(row) for row in data) + '\n]'
+
 if __name__ == '__main__':
 
-    df = get_df_incorporated_places()
+    # df = get_df_incorporated_places()
+    # print(df.head(20))
+
+    df = get_df_simplemaps_uscities_basic()
+
     print(df.head(20))
 
-    print(get_df_simplemaps_uscities_basic().head(20))
+    print([x for x in df.head(20).iterrows()])
+
+    max_pop = max(df['population'])
+    max_pop = 1
+
+    simplemaps_basic = [{ 'city': f"{city:15s}", 'centroid': [lon, lat, 0], 'value': pop/max_pop } for id, (city, state, lat, lon, pop, dens) in df.head(100).iterrows()]
+    # simplemaps_basic = [{ 'city': city, 'posiiton': [lon, lat, 12], 'normal': [-1, 0, 0], 'color': [0x32, 0x6c, 0xcc] } for id, (city, state, lat, lon, pop, dens) in df.head(20).iterrows()]
+    print(fake_jsonl(simplemaps_basic))
+    with open('../vis/prepped_data/simplemaps_basic_top20_columns.json', 'w') as wf:
+        wf.write(fake_jsonl(simplemaps_basic))
