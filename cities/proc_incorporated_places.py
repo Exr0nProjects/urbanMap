@@ -29,7 +29,7 @@ if __name__ == '__main__':
     max_pop = max(df['pop'])
     df['value'] = np.log(df['pop']) / np.log(max_pop * 2)
 
-    # df.head(100).to_csv('top_100_cities.csv')
+    df.head(500).to_csv('top_100_cities.csv')
 
     with open('../vis/prepped_data/cities.json', 'w') as wf:
         wf.write(fake_jsonl_df(df))
