@@ -1,0 +1,3 @@
+[submodule "example/deck.gl"]
+	path = example/deck.gl
+	url = git@github.com:visgl/deck.gl.git
