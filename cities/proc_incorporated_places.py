@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import json
 
 def get_df_incorporated_places():
@@ -32,10 +33,11 @@ if __name__ == '__main__':
     print([x for x in df.head(20).iterrows()])
 
     max_pop = max(df['population'])
-    max_pop = 1
+    df['population'] = np.log(df['population']) / np.log(max_pop * 2)
+    # max_pop = 1
 
-    simplemaps_basic = [{ 'city': f"{city:15s}", 'centroid': [lon, lat, 0], 'value': pop/max_pop } for id, (city, state, lat, lon, pop, dens) in df.head(100).iterrows()]
+    simplemaps_basic = [{ 'city': f"{city:15s}", 'centroid': [lon, lat], 'pop': pop, 'density': dens } for id, (city, state, lat, lon, pop, dens) in df.iterrows()]
     # simplemaps_basic = [{ 'city': city, 'posiiton': [lon, lat, 12], 'normal': [-1, 0, 0], 'color': [0x32, 0x6c, 0xcc] } for id, (city, state, lat, lon, pop, dens) in df.head(20).iterrows()]
-    print(fake_jsonl(simplemaps_basic))
-    with open('../vis/prepped_data/simplemaps_basic_top20_columns.json', 'w') as wf:
+    # print(fake_jsonl(simplemaps_basic))
+    with open('../vis/prepped_data/simplemaps_basic_columns.json', 'w') as wf:
         wf.write(fake_jsonl(simplemaps_basic))

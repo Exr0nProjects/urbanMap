@@ -6,8 +6,8 @@ import DeckGL from '@deck.gl/react';
 import { ColumnLayer, PointCloudLayer, GeoJsonLayer, ArcLayer } from '@deck.gl/layers';
 import { Map } from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
-import cities_population from './data/simplemaps_basic_top20_columns.json';
-import cities_locations_pointcloud from './data/simplemaps_basic_top20_pointcloud.json';
+//import cities_population from './data/simplemaps_basic_columns.json';
+//import cities_locations_pointcloud from './data/simplemaps_basic_top20_pointcloud.json';
 //import 'maplibre-gl/dist/maplibre-gl.css';
 
 
@@ -16,7 +16,7 @@ const INITIAL_VIEW_STATE = {
     longitude: -122.41669,
     latitude: 37.7853,
     zoom: 13,
-    pitch: 0,
+    pitch: 65,
     bearing: 0
 };
 
@@ -30,7 +30,7 @@ const INITIAL_VIEW_STATE = {
 // from https://github.com/visgl/deck.gl/blob/master/examples/get-started/react/arcgis/app.js
 const AIR_PORTS = 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_airports.geojson';
 
-const COLUMNS = 'http://localhost:3000/data/simplemaps_basic_top20_columns.json';
+const COLUMNS = 'http://localhost:3000/data/simplemaps_basic_columns.json';
 
 function App() {
 
@@ -72,14 +72,14 @@ function App() {
             diskResolution: 40,
             coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
             radius: 1000,
-            opacity: 1,
+            opacity: 0.5,
             extruded: true,
             pickable: true,
-            elevationScale: 18000000,
+            elevationScale: 1e6,
             getPosition: d => d.centroid,
             getFillColor: d => [48, 128, d.value * 255, 255],
             //getFillColor: d => [48, 128, 255, 255],
-            //getLineColor: [0, 0, 0],
+            getLineColor: [0, 0, 0],
             getElevation: d => d.value
             //getElevation: d => 1000000
         }),
@@ -99,7 +99,7 @@ function App() {
     return (
         <div className="bg-gray-700 text-white w-screen h-screen overflow-none scroll-none">
         <DeckGL
-            initialViewState={{longitude: -122.45, latitude: 37.78, zoom: 12, pitch: 45, bearing: 0}}
+            initialViewState={INITIAL_VIEW_STATE}
             controller={true}
             layers={layers} >
             <Map
