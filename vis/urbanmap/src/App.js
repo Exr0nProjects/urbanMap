@@ -3,7 +3,7 @@ import logo from './logo.png';
 
 import DeckGL from '@deck.gl/react';
 import { LineLayer } from '@deck.gl/layers';
-//import { Map } from 'react-map-gl';
+import { Map } from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
 //import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -29,24 +29,23 @@ function App() {
     ];
     return (
         <div className="bg-gray-700 p-4 text-white w-screen h-screen overflow-none">
-        <Map
-      initialViewState={{
-        longitude: -122.4,
-        latitude: 37.8,
-        zoom: 14
-      }}
-      style={{width: 600, height: 400}}
-      mapStyle="mapbox://styles/mapbox/streets-v9"
-    />
-        {/*            <DeckGL
+            <Map
                 initialViewState={INITIAL_VIEW_STATE}
-                controller={true}
-                layers={layers}>
-                <Map />
-            </DeckGL>
-            */}
+                style={{width: 600, height: 400}}
+                mapLib={maplibregl}
+                mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+            />
         </div>
     );
 }
+
+
+        //{[>            <DeckGL
+        //        initialViewState={INITIAL_VIEW_STATE}
+        //        controller={true}
+        //        layers={layers}>
+        //        <Map />
+        //    </DeckGL>
+        //    */}
 
 export default App;
