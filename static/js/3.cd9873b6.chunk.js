@@ -1,0 +1,2 @@
+(this.webpackJsonpurbanMap=this.webpackJsonpurbanMap||[]).push([[3],{238:function(s,a){a.printMsg=function(){console.log("This is a message from the demo package")}}}]);
+//# sourceMappingURL=3.cd9873b6.chunk.js.map
