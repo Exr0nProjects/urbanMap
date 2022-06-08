@@ -8,8 +8,8 @@ import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { Map } from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
 
-const MAPSTYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-//const MAPSTYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+//const MAPSTYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+const MAPSTYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
 // Viewport settings
 const INITIAL_VIEW_STATE = {
@@ -26,15 +26,19 @@ function App() {
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
     const geo_elevation_scale_from_zoom = (zoom) => Math.min(Math.max(Math.pow(2.8, (18 - zoom)), 1e4), 1e6);
+    const geo_radius_snapping_log_base = 1.4;
+    const geo_radius_from_zoom = (zoom) => Math.min(Math.max(Math.pow(geo_radius_snapping_log_base, Math.floor(Math.log(Math.pow(2.3, 18-zoom))/Math.log(geo_radius_snapping_log_base))), 500), 1e5);
 
     const layers = [
         new HexagonLayer({
             id: 'walkability-hexagons',
             data: POPULATION_COLUMNS_DATA,
+            opacity: 0.5,
+            lowerPercentile: 2,
             pickable: true,
             extruded: true,
-            radius: 1000,
-            elevationRange: [0, 1e5],
+            radius: geo_radius_from_zoom(viewState.zoom),
+            elevationRange: [0, geo_elevation_scale_from_zoom(viewState.zoom)],
             //elevationRange: () => [0, geo_elevation_scale_from_zoom(viewState.zoom)],
             //getElevationRange: () => [0, geo_elevation_scale_from_zoom(viewState.zoom)],
             //getElevationRange: () => [0, 1e5],
@@ -61,6 +65,7 @@ function App() {
             updateTriggers: {
                 //getElevationWeight: viewState.zoom,
                 elevationRange: viewState.zoom,
+                radius: viewState.zoom
             }
         }),
         //new HexagonLayer({
