@@ -31,7 +31,7 @@ function App() {
 
     const layers = [
         new HexagonLayer({
-            id: 'walkability-hexagons',
+            id: 'population-agg-hexagons',
             data: POPULATION_COLUMNS_DATA,
             opacity: 0.5,
             lowerPercentile: 2,
@@ -39,64 +39,11 @@ function App() {
             extruded: true,
             radius: geo_radius_from_zoom(viewState.zoom),
             elevationRange: [0, geo_elevation_scale_from_zoom(viewState.zoom)],
-            //elevationRange: () => [0, geo_elevation_scale_from_zoom(viewState.zoom)],
-            //getElevationRange: () => [0, geo_elevation_scale_from_zoom(viewState.zoom)],
-            //getElevationRange: () => [0, 1e5],
-            //elevationScale: 500000,
-            //elevationScale: 1,
             getPosition: d => [d.lon, d.lat],
 
-            getElevationWeight: d => {
-                //if (Math.random() < 1e-4) console.log();
-                return d.value;
-                //return d.value * geo_elevation_scale_from_zoom(viewState.zoom)*1000;
-            },
+            getElevationWeight: d => d.value,
             elevationAggregation: 'SUM',
-            //getElevationValue: d => {
-            //    return 100;
-            //    //console.log(d);
-            //    //if (Math.random() < 1e-4) console.log('elevation = ',d.map(x => x.value).reduce((a, b) => a+b, 0) * geo_elevation_scale_from_zoom(viewState.zoom));
-            //    const sum_of_values = d.map(x => x.value).reduce((a, b) => a+b, 0);
-            //    if (Math.random() < 1e-4) console.log(sum_of_values, geo_elevation_scale_from_zoom(viewState.zoom));
-            //    return sum_of_values * geo_elevation_scale_from_zoom(viewState.zoom);
-            //return d.value * geo_elevation_scale_from_zoom(viewState.zoom);
-            //},
-
-            updateTriggers: {
-                //getElevationWeight: viewState.zoom,
-                elevationRange: viewState.zoom,
-                radius: viewState.zoom
-            }
         }),
-        //new HexagonLayer({
-        //    visible: false,
-        //    id: 'population-hexagons',
-        //    data: POPULATION_COLUMNS_DATA,
-        //    pickable: true,
-        //    extruded: true,
-        //    radius: 1000,
-        //    elevationScale: 1,
-        //    getPosition: d => [d.lon, d.lat],
-        //
-        //    //getElevationWeight: d => d.value * geo_elevation_scale_from_zoom(viewState.zoom),
-        //    //elevationAggregation: 'SUM',
-        //    getElevationValue: d => {
-        //        //console.log(d);
-        //        //if (Math.random() < 1e-4) console.log('elevation = ',d.map(x => x.value).reduce((a, b) => a+b, 0) * geo_elevation_scale_from_zoom(viewState.zoom));
-        //        const sum_of_values = d.map(x => x.value).reduce((a, b) => a+b, 0);
-        //        if (Math.random() < 1e-4) console.log(sum_of_values, geo_elevation_scale_from_zoom(viewState.zoom));
-        //        return sum_of_values * geo_elevation_scale_from_zoom(viewState.zoom);
-        //    return d.value * geo_elevation_scale_from_zoom(viewState.zoom);
-        //    },
-        //
-        //    updateTriggers: {
-        //        getElevationValue: viewState.zoom,
-        //    }
-        //
-        //    //getColorValue: d => d.value,
-        //    //getFillColor: d => [48, 128, d.value * 255, 255],
-        //    //lineColor: [0, 0, 0],
-        //}),
         new ColumnLayer({
             visible: false,
             id: 'population-columns',
