@@ -13,11 +13,14 @@ const MAPSTYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 
 // Viewport settings
 const INITIAL_VIEW_STATE = {
-    longitude: -122.41669,
-    latitude: 37.7853,
-    zoom: 13,
-    pitch: 65,
-    bearing: 0
+    longitude: -103.90699029686266,
+    latitude: 31.884715226569835,
+    altitude: 1.5,
+    zoom: 3.2,
+    minZoom: 2.35,
+    maxZoom: 15,
+    pitch: 60,
+    bearing: -27.747183979974977,
 };
 
 const POPULATION_COLUMNS_DATA = 'http://localhost:3000/data/cities.json';
@@ -40,7 +43,6 @@ function App() {
             radius: geo_radius_from_zoom(viewState.zoom),
             elevationRange: [0, geo_elevation_scale_from_zoom(viewState.zoom)],
             getPosition: d => [d.lon, d.lat],
-
             getElevationWeight: d => d.value,
             elevationAggregation: 'SUM',
         }),
@@ -71,7 +73,10 @@ function App() {
         <DeckGL
             controller={true}
             viewState={viewState}
-            onViewStateChange={ e => { setViewState(e.viewState) } }
+            onViewStateChange={ e => {
+                console.log(e.viewState);
+                setViewState(e.viewState);
+            } }
             layers={layers} >
             <Map
                 className="w-full h-full"
