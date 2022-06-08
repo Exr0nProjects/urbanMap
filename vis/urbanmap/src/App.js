@@ -8,6 +8,8 @@ import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { Map } from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
 
+const DOMAIN_NAME = 'http://localhost:3000'
+
 //const MAPSTYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 const MAPSTYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
@@ -23,7 +25,8 @@ const INITIAL_VIEW_STATE = {
     bearing: -27.747183979974977,
 };
 
-const POPULATION_COLUMNS_DATA = 'http://localhost:3000/data/cities.json';
+const POPULATION_COLUMNS_DATA = DOMAIN_NAME + '/data/cities.json';
+const LIVABILITY_COLUMNS_DATA = DOMAIN_NAME + '/data/cities_livability.json';
 
 function App() {
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
@@ -34,37 +37,69 @@ function App() {
 
     const layers = [
         new HexagonLayer({
-            id: 'population-agg-hexagons',
-            data: POPULATION_COLUMNS_DATA,
+            visible: false,
+            id: 'walkability-agg-hexagons',
+            data: LIVABILITY_COLUMNS_DATA,
             opacity: 0.5,
             lowerPercentile: 2,
             pickable: true,
             extruded: true,
             radius: geo_radius_from_zoom(viewState.zoom),
             elevationRange: [0, geo_elevation_scale_from_zoom(viewState.zoom)],
-            getPosition: d => [d.lon, d.lat],
-            getElevationWeight: d => d.value,
-            elevationAggregation: 'SUM',
+            getPosition: d => [d.snapped_lon, d.snapped_lat],
+            getElevationWeight: d => d.walkscore / 100,
+            elevationAggregation: 'AVG',
         }),
         new ColumnLayer({
-            visible: false,
-            id: 'population-columns',
-            data: POPULATION_COLUMNS_DATA,
+            id: 'walkability-columns',
+            data: LIVABILITY_COLUMNS_DATA,
             diskResolution: 40,
             coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
-            radius: 1000,
-            opacity: 0.5,
+            radius: 800,
+            opacity: 0.8,
             extruded: true,
             pickable: true,
             elevationScale: 1,
-            getPosition: d => [d.lon, d.lat],
-            getFillColor: d => [48, 128, d.value * 255, 255],
+            getPosition: d => [d.snapped_lon, d.snapped_lat],
+            getFillColor: d => [(1 - d.walkscore / 100) * 255, d.walkscore/100 * 255, 52, 255],
             getLineColor: (d, di) => [0, 0, 0],
-            getElevation: d => d.value * geo_elevation_scale_from_zoom(viewState.zoom),
+            getElevation: d => d.walkscore / 100 * geo_elevation_scale_from_zoom(viewState.zoom),
             updateTriggers: {
                 getElevation: viewState.zoom,
             }
         }),
+        new HexagonLayer({
+            id: 'population-agg-hexagons',
+            data: POPULATION_COLUMNS_DATA,
+            opacity: 0.2,
+            lowerPercentile: 2,
+            pickable: true,
+            extruded: true,
+            radius: geo_radius_from_zoom(viewState.zoom),
+            elevationRange: [0, geo_elevation_scale_from_zoom(viewState.zoom) * 0.7],
+            getPosition: d => [d.lon, d.lat],
+            getElevationWeight: d => d.value,
+            elevationAggregation: 'SUM',
+        }),
+        //new ColumnLayer({
+        //    visible: false,
+        //    id: 'population-columns',
+        //    data: POPULATION_COLUMNS_DATA,
+        //    diskResolution: 40,
+        //    coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
+        //    radius: 1000,
+        //    opacity: 0.5,
+        //    extruded: true,
+        //    pickable: true,
+        //    elevationScale: 1,
+        //    getPosition: d => [d.lon, d.lat],
+        //    getFillColor: d => [48, 128, d.value * 255, 255],
+        //    getLineColor: (d, di) => [0, 0, 0],
+        //    getElevation: d => d.value * geo_elevation_scale_from_zoom(viewState.zoom),
+        //    updateTriggers: {
+        //        getElevation: viewState.zoom,
+        //    }
+        //}),
     ];
 
     return (
@@ -74,7 +109,7 @@ function App() {
             controller={true}
             viewState={viewState}
             onViewStateChange={ e => {
-                console.log(e.viewState);
+                //console.log(e.viewState);
                 setViewState(e.viewState);
             } }
             layers={layers} >

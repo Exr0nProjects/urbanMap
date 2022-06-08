@@ -13,6 +13,9 @@ with open(filename, 'r') as rf:
 
 print('total_lines', total_lines)
 
+def fake_jsonl_df(df):
+    return '[\n' + ',\n'.join('    ' + json.dumps({ k: v for k, v in row.items() }, allow_nan=False) for id, row in df.iterrows() ) + '\n]'
+
 with open(filename, 'r') as rf:
     nocity = 0
     nowalk = 0
@@ -59,7 +62,12 @@ with open(filename, 'r') as rf:
     grouped = df.groupby('city')
     print(grouped.count().sort_values('status', ascending=False).head(20))
 
-    df.to_csv('cities_livability.csv')
+
+    # df.to_csv('cities_livability.csv')
+
+    with open('cities_livability.json', 'w') as wf:
+        wf.write(df.to_json(orient='records'))
+    #     wf.write(fake_jsonl_df(df))
 
 
     # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
