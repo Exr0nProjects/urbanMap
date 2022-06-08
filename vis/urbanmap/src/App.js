@@ -65,7 +65,7 @@ function App() {
             elevationAggregation: 'MAX',
         }),
         new HexagonLayer({
-            visible: false,
+            visible: true,
             id: 'walkability-agg-hexagons-avg',
             data: LIVABILITY_COLUMNS_DATA,
             //colorRange: createLinearGradientRange([150, 0, 0], [50, 255, 50], 6),
@@ -82,7 +82,7 @@ function App() {
             elevationAggregation: 'AVG',
         }),
         new ColumnLayer({
-            visible: false,
+            visible: true,
             id: 'walkability-columns',
             data: LIVABILITY_COLUMNS_DATA,
             diskResolution: 40,
@@ -100,6 +100,7 @@ function App() {
                 getElevation: viewState.zoom,
             }
         }),
+    // POPULATION
         new HexagonLayer({
             visible: false,
             id: 'population-agg-hexagons',
@@ -133,6 +134,40 @@ function App() {
         //        getElevation: viewState.zoom,
         //    }
         //}),
+    // POLITICS
+        //new HexagonLayer({
+        //    visible: true,
+        //    id: 'political-agg-hexagons',
+        //    data: POLITICAL_COUNTIES_DATA,
+        //    colorRange: [[200, 0, 0], [100, 0, 100], [0, 0, 200]],
+        //    opacity: 0.8,
+        //    pickable: true,
+        //    extruded: false,
+        //    radius: geo_radius_from_zoom(viewState.zoom),
+        //    //elevationRange: [0, geo_elevation_scale_from_zoom(viewState.zoom) * 0.6],
+        //    getPosition: d => [d.coords[1], d.coords[0]],
+        //    getElevationWeight: d => d.party === 'DEMOCRAT' ? 1 : 0,
+        //    elevationAggregation: 'AVG',
+        //}),
+        new ColumnLayer({
+            visible: true,
+            id: 'political-columns',
+            data: POLITICAL_COUNTIES_DATA,
+            diskResolution: 40,
+            coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
+            radius: 3e4,
+            opacity: 0.6,
+            extruded: false,
+            pickable: true,
+            elevationScale: 1,
+            getPosition: d => [d.coords[1], d.coords[0]],
+            getFillColor: d => d.party == 'DEMOCRAT' ? [0, 21, 188] : [222, 1, 0],
+            getLineColor: (d, di) => [0, 0, 0],
+            getElevation: d => d.value * geo_elevation_scale_from_zoom(viewState.zoom),
+            updateTriggers: {
+                getElevation: viewState.zoom,
+            }
+        }),
         //new ScatterplotLayer({
         //    id: 'scatter-plot',
         //    DATA_URL,
