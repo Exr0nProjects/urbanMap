@@ -1,2 +1,0 @@
-(this["webpackJsonpreact-tailwind-starter"]=this["webpackJsonpreact-tailwind-starter"]||[]).push([[3],{177:function(t,s){s.printMsg=function(){console.log("This is a message from the demo package")}}}]);
-//# sourceMappingURL=3.350f77d1.chunk.js.map
