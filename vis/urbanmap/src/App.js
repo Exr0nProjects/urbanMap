@@ -47,11 +47,11 @@ function App() {
             </div>
 
 
-            <div className="fixed bottom-0 left-0 z-10 flex flex-col-reverse w-screen mb-0 ml-0" style={{padding: '1rem', pointerEvents: 'none'}}>
+            <div className="fixed bottom-0 left-0 z-10 flex flex-col-reverse mb-0 ml-0" style={{padding: '1rem' }}>
                 <div className="relative flex flex-col text-white" style={{padding: '1rem', borderRadius: '1rem', width: '21rem', backgroundColor: 'rgba(30, 30, 30, 0.2)', fontFamily: 'Helvetica', userSelect: 'none'}}>
         <p>Drag to pan, scroll to zoom, shift to rotate.<br/></p>
 
-        <FormGroup>
+        <FormGroup style={{pointerEvents: 'revert'}}>
         { Object.entries(checkboxesState).map(([k, v], i) =>
             <FormControlLabel
                 control={<Checkbox checked={v} onChange={handleCheck} name={k} />}
