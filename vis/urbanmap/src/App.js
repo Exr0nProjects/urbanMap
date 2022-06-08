@@ -28,6 +28,13 @@ const INITIAL_VIEW_STATE = {
 const POPULATION_COLUMNS_DATA = DOMAIN_NAME + '/data/cities.json';
 const LIVABILITY_COLUMNS_DATA = DOMAIN_NAME + '/data/cities_livability.json';
 
+function createLinearGradientRange(left, right, num) {  // create an array of num RGB arrays, including the endpoints
+    return Array(num).fill([left, right]).map(([a, b], i) =>
+        Array(Math.min(a.length, b.length)).fill(0)
+            .map((_, j) => i/(num-1) * b[j] + (1 - i/(num-1)) * a[j])
+    );
+}
+
 function App() {
     const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
@@ -37,9 +44,11 @@ function App() {
 
     const layers = [
         new HexagonLayer({
-            visible: false,
-            id: 'walkability-agg-hexagons',
+            visible: true,
+            id: 'walkability-agg-hexagons-avg',
             data: LIVABILITY_COLUMNS_DATA,
+            //colorRange: createLinearGradientRange([150, 0, 0], [50, 255, 50], 6),
+            colorRange: [[221, 152, 12], [172, 133, 11], [121, 114, 9], [92, 164, 6], [67, 207, 3], [39, 255, 0]],
             opacity: 0.5,
             lowerPercentile: 2,
             pickable: true,
@@ -51,6 +60,7 @@ function App() {
             elevationAggregation: 'AVG',
         }),
         new ColumnLayer({
+            visible: true,
             id: 'walkability-columns',
             data: LIVABILITY_COLUMNS_DATA,
             diskResolution: 40,
@@ -63,12 +73,13 @@ function App() {
             getPosition: d => [d.snapped_lon, d.snapped_lat],
             getFillColor: d => [(1 - d.walkscore / 100) * 255, d.walkscore/100 * 255, 52, 255],
             getLineColor: (d, di) => [0, 0, 0],
-            getElevation: d => d.walkscore / 100 * geo_elevation_scale_from_zoom(viewState.zoom),
+            getElevation: d => d.walkscore / 100 * geo_elevation_scale_from_zoom(viewState.zoom) * 1.2,
             updateTriggers: {
                 getElevation: viewState.zoom,
             }
         }),
         new HexagonLayer({
+            visible: false,
             id: 'population-agg-hexagons',
             data: POPULATION_COLUMNS_DATA,
             opacity: 0.2,
