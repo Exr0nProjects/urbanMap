@@ -7,8 +7,8 @@ import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { Map } from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
 
-//const DOMAIN_NAME = 'https://urbanmap.exr0n.com';
-const DOMAIN_NAME = 'http://localhost:3000';
+const DOMAIN_NAME = 'https://urbanmap.exr0n.com';
+//const DOMAIN_NAME = 'http://localhost:3000';
 //const DOMAIN_NAME = '';
 
 // Viewport settings

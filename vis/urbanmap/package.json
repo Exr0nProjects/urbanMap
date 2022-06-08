@@ -1,7 +1,8 @@
 {
-  "name": "react-tailwind-starter",
+  "name": "urbanMap",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "https://urbanmap.exr0n.com",
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
