@@ -3,7 +3,7 @@ import logo from './logo.png';
 
 import { COORDINATE_SYSTEM } from '@deck.gl/core';
 import DeckGL from '@deck.gl/react';
-import { ColumnLayer, PointCloudLayer, GeoJsonLayer, ArcLayer } from '@deck.gl/layers';
+import { ColumnLayer, PointCloudLayer, GeoJsonLayer, ArcLayer, ScatterplotLayer } from '@deck.gl/layers';
 import { HexagonLayer } from '@deck.gl/aggregation-layers';
 import { Map } from 'react-map-gl';
 import maplibregl from 'maplibre-gl';
@@ -11,7 +11,8 @@ import maplibregl from 'maplibre-gl';
 const DOMAIN_NAME = 'http://localhost:3000'
 
 //const MAPSTYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-const MAPSTYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+//const MAPSTYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+const MAPSTYLE = "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json";
 
 // Viewport settings
 const INITIAL_VIEW_STATE = {
@@ -27,6 +28,7 @@ const INITIAL_VIEW_STATE = {
 
 const POPULATION_COLUMNS_DATA = DOMAIN_NAME + '/data/cities.json';
 const LIVABILITY_COLUMNS_DATA = DOMAIN_NAME + '/data/cities_livability.json';
+const POLITICAL_COUNTIES_DATA = DOMAIN_NAME + '/data/politics_by_coords.json';
 
 function createLinearGradientRange(left, right, num) {  // create an array of num RGB arrays, including the endpoints
     return Array(num).fill([left, right]).map(([a, b], i) =>
@@ -42,9 +44,10 @@ function App() {
     const geo_radius_snapping_log_base = 1.4;
     const geo_radius_from_zoom = (zoom) => Math.min(Math.max(Math.pow(geo_radius_snapping_log_base, Math.floor(Math.log(Math.pow(2.3, 18-zoom))/Math.log(geo_radius_snapping_log_base))), 500), 1e5);
 
+    //const DATA_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/scatterplot/manhattan.json';
     const layers = [
         new HexagonLayer({
-            visible: true,
+            visible: false,
             id: 'walkability-agg-hexagons-max',
             data: LIVABILITY_COLUMNS_DATA,
             //colorRange: createLinearGradientRange([150, 0, 0], [50, 255, 50], 6),
@@ -62,7 +65,7 @@ function App() {
             elevationAggregation: 'MAX',
         }),
         new HexagonLayer({
-            visible: true,
+            visible: false,
             id: 'walkability-agg-hexagons-avg',
             data: LIVABILITY_COLUMNS_DATA,
             //colorRange: createLinearGradientRange([150, 0, 0], [50, 255, 50], 6),
@@ -79,7 +82,7 @@ function App() {
             elevationAggregation: 'AVG',
         }),
         new ColumnLayer({
-            visible: true,
+            visible: false,
             id: 'walkability-columns',
             data: LIVABILITY_COLUMNS_DATA,
             diskResolution: 40,
@@ -130,6 +133,33 @@ function App() {
         //        getElevation: viewState.zoom,
         //    }
         //}),
+        //new ScatterplotLayer({
+        //    id: 'scatter-plot',
+        //    DATA_URL,
+        //    radiusScale: 30,
+        //    radiusMinPixels: 0.25,
+        //    getPosition: d => { console.log('getting coord!'); return [d[0], d[1], 0] },
+        //    getFillColor: d => (d[2] === 1 ? [0, 0, 255] : [255, 0, 0]),
+        //    getRadius: 1,
+        //})
+        //new ScatterplotLayer({
+        //    visible: true,
+        //    id: 'political-scatter-plot',
+        //    POLITICAL_COUNTIES_DATA,
+        //    radiusScale: 10000,
+        //    radiusMinPixels: 20,
+        //    radiusMaxPixels: 100,
+        //    //coordinateSystem: COORDINATE_SYSTEM.LNGLAT,
+        //    //radiusMinPixels: 0.25,
+        //    //getPosition: d => [d.coords[1], d.coords[0], 1],
+        //    getPosition: d => {
+        //        console.log(d.coords[1], d.coords[0])
+        //        return [d.coords[1], d.coords[0]];
+        //    },
+        //    //getFillColor: d => ({ DEMOCRAT: [0, 21, 188], REPUBLICAN: [222, 1, 0], LIBERTARIAN: [254, 209, 5], OTHER: [30, 30, 30] })[d.party],
+        //    getFillColor: [0x32, 0x6c, 0xcc],
+        //    getRadius: 1,
+        //})
     ];
 
     return (
@@ -147,6 +177,8 @@ function App() {
                 className="w-full h-full"
                 mapLib={maplibregl}
                 mapStyle={MAPSTYLE}
+                reuseMaps
+                preventStyleDiffering={true}
             />
         </DeckGL>
         </div>
